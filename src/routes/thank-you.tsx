@@ -9,6 +9,9 @@ const TITLE = "Request Received | Euro Gulf Logistics";
 const DESCRIPTION = "Your heavy haulage quote request has reached Euro Gulf dispatch.";
 
 export const Route = createFileRoute("/thank-you")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    ref: typeof search.ref === "string" ? search.ref : undefined,
+  }),
   head: () =>
     buildSeo({
       title: TITLE,
@@ -38,6 +41,8 @@ const NEXT_STEPS = [
 ];
 
 function ThankYouPage() {
+  const { ref } = Route.useSearch();
+
   return (
     <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
       <div className="flex flex-col items-center text-center">
@@ -49,6 +54,21 @@ function ThankYouPage() {
           Your request is with dispatch now. If it&rsquo;s urgent, call the line below and quote
           your company name &mdash; we&rsquo;ll pull the request up immediately.
         </p>
+        {ref ? (
+          <div className="mt-6 rounded border border-border bg-secondary/40 px-5 py-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Your reference
+            </p>
+            <p className="mono-num mt-1 text-sm font-bold">{ref}</p>
+            <Link
+              to="/track"
+              search={{ ref }}
+              className="mt-2 inline-block text-xs font-bold uppercase tracking-widest text-amber underline underline-offset-4"
+            >
+              Track this request
+            </Link>
+          </div>
+        ) : null}
         <a href={telHref(SITE.phones[0])} className="mono-num mt-4 text-lg font-bold text-amber">
           {SITE.phones[0]}
         </a>
