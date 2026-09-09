@@ -12,6 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 
+import { FleetStatus } from "@/components/site/FleetStatus";
 import { SeoJsonLd } from "@/components/site/SeoJsonLd";
 import { StatCounters } from "@/components/site/StatCounters";
 import { useQuote } from "@/components/site/quote-context";
@@ -148,6 +149,11 @@ function Index() {
           <StatCounters className="mt-16 border-t border-white/10 pt-10" />
         </div>
       </section>
+
+      {/* Live fleet status */}
+      <div className="-mt-8 relative z-10 sm:-mt-10">
+        <FleetStatus />
+      </div>
 
       {/* Core services */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
