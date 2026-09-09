@@ -80,20 +80,25 @@ export function QuoteFormDialog({
   const mutation = useMutation({
     mutationFn: async () => {
       if (isSpam()) return; // silently no-op — see spam-guard.ts for why
-      const { error } = await supabase.from("quote_requests").insert({
-        customer_name: form.name.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim(),
-        service_requested: form.service,
-        project_location: form.location.trim() || null,
-        site_type: form.siteType || null,
-        project_details: form.details.trim() || null,
-      });
+      const { data, error } = await supabase
+        .from("quote_requests")
+        .insert({
+          customer_name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          service_requested: form.service,
+          project_location: form.location.trim() || null,
+          site_type: form.siteType || null,
+          project_details: form.details.trim() || null,
+        })
+        .select("id")
+        .single();
       if (error) throw error;
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       onOpenChange(false);
-      navigate({ to: "/thank-you" });
+      navigate({ to: "/thank-you", search: { ref: data?.id } });
     },
     onError: (error: Error) =>
       toast.error("We couldn't submit your request", { description: error.message }),
