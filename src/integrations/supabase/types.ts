@@ -113,6 +113,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      reviews: {
+        Row: {
+          approved: boolean;
+          author_name: string;
+          created_at: string;
+          id: string;
+          quote: string;
+          rating: number;
+          role: string | null;
+        };
+        Insert: {
+          approved?: boolean;
+          author_name: string;
+          created_at?: string;
+          id?: string;
+          quote: string;
+          rating?: number;
+          role?: string | null;
+        };
+        Update: {
+          approved?: boolean;
+          author_name?: string;
+          created_at?: string;
+          id?: string;
+          quote?: string;
+          rating?: number;
+          role?: string | null;
+        };
+        Relationships: [];
+      };
       services: {
         Row: {
           category: string;
@@ -211,6 +241,14 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      get_quote_status: {
+        Args: { p_id: string; p_email: string };
+        Returns: {
+          status: string;
+          service_requested: string;
+          created_at: string;
+        }[];
+      };
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"];
@@ -233,7 +271,7 @@ type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
 type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
 
-export type Tables<
+export type Tables
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
@@ -260,7 +298,7 @@ export type Tables<
       : never
     : never;
 
-export type TablesInsert<
+export type TablesInsert
   DefaultSchemaTableNameOrOptions extends
     keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
@@ -284,7 +322,7 @@ export type TablesInsert<
       : never
     : never;
 
-export type TablesUpdate<
+export type TablesUpdate
   DefaultSchemaTableNameOrOptions extends
     keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
@@ -308,7 +346,7 @@ export type TablesUpdate<
       : never
     : never;
 
-export type Enums<
+export type Enums
   DefaultSchemaEnumNameOrOptions extends
     keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
   EnumName extends (DefaultSchemaEnumNameOrOptions extends {
@@ -324,7 +362,7 @@ export type Enums<
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never;
 
-export type CompositeTypes<
+export type CompositeTypes
   PublicCompositeTypeNameOrOptions extends
     keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
