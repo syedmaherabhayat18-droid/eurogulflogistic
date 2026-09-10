@@ -176,6 +176,30 @@
   );
 }
 
+/* Subtle technical/blueprint grid texture for navy sections — reinforces
+   the industrial/engineering feel without adding any imagery. */
+@utility blueprint-grid {
+  background-image:
+    linear-gradient(oklch(1 0 0 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(1 0 0 / 0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* Amber corner tick — a small industrial "stamp" mark used on cards and
+   section labels for visual consistency with the brand's precision feel. */
+@utility corner-tick {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 18px;
+    height: 3px;
+    background-color: var(--color-amber);
+  }
+}
+
 /* Site-wide smooth hover animation on interactive elements. */
 @layer base {
   a,
