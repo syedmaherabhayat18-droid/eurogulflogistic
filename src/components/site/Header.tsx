@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, Phone, X } from "lucide-react";
+import { Mail, Menu, Phone, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useQuote } from "@/components/site/quote-context";
 import { SITE, telHref } from "@/lib/site";
+import { cn } from "@/lib/utils";
 import logo from "@/assets/euro-gulf-logo.png";
 
 const NAV = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
   { to: "/about", label: "About" },
+  { to: "/track", label: "Track Order" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
@@ -19,76 +21,101 @@ export function Header() {
   const { openQuote } = useQuote();
 
   return (
-    <header className="sticky top-0 z-40 surface-navy border-b border-white/10">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <img
-            src={logo}
-            alt={`${SITE.name} logo`}
-            width={32}
-            height={32}
-            className="size-8 rounded object-contain"
-          />
-          <span className="text-base font-bold tracking-tight text-navy-foreground">
-            {SITE.name}
-          </span>
-        </Link>
-
-        <nav className="hidden items-center gap-1 md:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              activeOptions={{ exact: item.to === "/" }}
-              activeProps={{ className: "text-amber" }}
-              className="rounded px-3 py-2 text-sm font-semibold text-navy-muted transition-colors hover:text-navy-foreground"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-3 md:flex">
-          <a
-            href={telHref(SITE.phones[1])}
-            className="mono-num flex items-center gap-2 text-sm font-semibold text-navy-foreground"
-          >
-            <Phone className="size-4 text-amber" />
-            {SITE.phones[1]}
-          </a>
-          <Button variant="amber" size="sm" onClick={() => openQuote()}>
-            Get a Quote
-          </Button>
+    <>
+      {/* Utility bar — dispatch line always visible, signals 24/7 seriousness */}
+      <div className="hidden bg-navy-soft/60 text-navy-muted sm:block">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-1.5 text-xs sm:px-6 lg:px-8">
+          <p className="label-caps tracking-widest text-amber/90">24/7 Dispatch &middot; Al Sajaa, Sharjah</p>
+          <div className="flex items-center gap-5">
+            <a href={telHref(SITE.phones[0])} className="mono-num flex items-center gap-1.5 hover:text-navy-foreground">
+              <Phone className="size-3.5" aria-hidden="true" />
+              {SITE.phones[0]}
+            </a>
+            {SITE.email ? (
+              <a href={`mailto:${SITE.email}`} className="flex items-center gap-1.5 hover:text-navy-foreground">
+                <Mail className="size-3.5" aria-hidden="true" />
+                {SITE.email}
+              </a>
+            ) : null}
+          </div>
         </div>
-
-        <button
-          type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex size-10 items-center justify-center rounded text-navy-foreground md:hidden"
-        >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
       </div>
 
-      {open ? (
-        <div className="border-t border-white/10 bg-navy-soft md:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col px-4 py-3">
+      <header className="sticky top-0 z-40 surface-navy border-b border-white/10">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
+            <img
+              src={logo}
+              alt={`${SITE.name} logo`}
+              width={32}
+              height={32}
+              className="size-8 rounded object-contain"
+            />
+            <span className="text-base font-bold tracking-tight text-navy-foreground">
+              {SITE.name}
+            </span>
+          </Link>
+
+          <nav className="hidden items-center gap-1 md:flex">
             {NAV.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                onClick={() => setOpen(false)}
                 activeOptions={{ exact: item.to === "/" }}
-                activeProps={{ className: "text-amber" }}
-                className="py-3 text-sm font-semibold text-navy-foreground"
+                activeProps={{ className: "text-amber after:w-[calc(100%-1.5rem)]" }}
+                className={cn(
+                  "relative rounded px-3 py-2 text-sm font-semibold text-navy-muted transition-colors hover:text-navy-foreground",
+                  "after:absolute after:bottom-0.5 after:left-3 after:h-0.5 after:w-0 after:bg-amber",
+                  "after:transition-all after:duration-200 hover:after:w-[calc(100%-1.5rem)]",
+                )}
               >
                 {item.label}
               </Link>
             ))}
           </nav>
+
+          <div className="hidden items-center gap-3 md:flex">
+            
+              href={telHref(SITE.phones[1])}
+              className="mono-num flex items-center gap-2 text-sm font-semibold text-navy-foreground"
+            >
+              <Phone className="size-4 text-amber" />
+              {SITE.phones[1]}
+            </a>
+            <Button variant="amber" size="sm" onClick={() => openQuote()}>
+              Get a Quote
+            </Button>
+          </div>
+
+          <button
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
+            className="inline-flex size-10 items-center justify-center rounded text-navy-foreground md:hidden"
+          >
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
         </div>
-      ) : null}
-    </header>
+
+        {open ? (
+          <div className="border-t border-white/10 bg-navy-soft md:hidden">
+            <nav className="mx-auto flex max-w-7xl flex-col px-4 py-3">
+              {NAV.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  activeOptions={{ exact: item.to === "/" }}
+                  activeProps={{ className: "text-amber" }}
+                  className="py-3 text-sm font-semibold text-navy-foreground"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        ) : null}
+      </header>
+    </>
   );
 }
