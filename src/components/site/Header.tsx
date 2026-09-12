@@ -75,7 +75,7 @@ export function Header() {
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
-            
+<a            
               href={telHref(SITE.phones[1])}
               className="mono-num flex items-center gap-2 text-sm font-semibold text-navy-foreground"
             >
